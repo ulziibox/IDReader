@@ -1,0 +1,8 @@
+1. git tataj suulgana
+2. nodejs tataj suulgana
+3. git terminal aa neej daraah commanduudiig oruulna 
+ $ git init
+ $ git config --global user.name "gitlab iin username"
+ $ git config --global user.email "gitlab iin username"
+ $ git remote add origin https://github.com/ulziibox/IDReader.git
+ $ git pull origin master
