@@ -1,6 +1,6 @@
 1. git tataj suulgana
-2. nodejs tataj suulgana
-3. git terminal aa neej daraah commanduudiig oruulna 
+2. git terminal aa neej daraah commanduudiig oruulna 
+
  $ git init
  $ git config --global user.name "gitlab iin username"
  $ git config --global user.email "gitlab iin username"
