@@ -98,6 +98,7 @@ body {
     background: #ffffff;
     /* background-image: url("img/uploadBackground.png"); */
     width: 800px;
+    /* height: 487px; */
     height: auto;
     border-radius: 10px;
     border: 0.5px solid #C7C7C7;
@@ -148,4 +149,28 @@ body {
 
 #upload-button:hover {
     background: rgb(39, 74, 168);
+}
+
+/* Reader */
+
+progress {
+    /* display: block; */
+    width: 100%;
+    transition: opacity 0.5s linear;
+}
+progress[value="1"] {
+    opacity: 0.5;
+}
+
+#log > div {
+    color: #313131;
+    border-top: 1px solid #dadada;
+    padding: 9px;
+    display: flex;
+}
+#log > div:first-child {
+    border: 0;
+}
+.status {
+    min-width: 250px;
 }
