@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <title>Boogle ID Reader</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/tesseract.js"></script>
+    <script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.13/dist/tesseract.min.js'></script>
 </head>
 <body>
     <div class="navbar">
@@ -23,20 +25,74 @@
     </div>
     <div class="container">
         <div class="readerBox">
-            <div class="dragFile">
-                <img src="img/upload.png">
-                <p>Зургийг энэ хэсэгт <b>чирж</b> хуулах боломжтой</p>
-            </div>
-            <div class="readerFooter">
-                <div class="uploadFile">
-                    <input type="file" id="real-file" hidden/>
-                    <span id="upload-text">Хоосон байна</span>
-                    <button type="button" id="upload-button">Зураг оруулах</button>
+            <div id="log"></div>
+            <div id="reader">
+                <div class="dragFile">
+                    <img src="img/upload.png">
+                    <p>Зургийг энэ хэсэгт <b>чирж</b> хуулах боломжтой</p>
+                </div>
+                <div class="readerFooter">
+                    <div class="uploadFile" id="uploadFile">
+                        <input type="file" id="real-file" accept="image/*" onchange="recognizeFile(window.lastFile=this.files[0])" hidden/>
+                        <span id="upload-text">Хоосон байна</span>
+                        <button type="button" id="upload-button">Зураг оруулах</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
+    <script>
+            function progressUpdate(packet){
+                document.getElementById("reader").style.display = "none";
+
+                var log = document.getElementById('log');
+                if(log.firstChild && log.firstChild.status === packet.status){
+                    // if('progress' in packet){
+                    //     var progress = log.firstChild.querySelector('progress')
+                    //     progress.value = packet.progress
+                    // }
+                }else{
+                    var line = document.createElement('div');
+                    line.status = packet.status;
+                    var status = document.createElement('div')
+                    status.className = 'status'
+                    status.appendChild(document.createTextNode(packet.status))
+                    line.appendChild(status)
+                    if('progress' in packet){
+                        var progress = document.createElement('progress')
+                        progress.value = packet.progress
+                        progress.max = 1
+                        line.appendChild(progress)
+                    }
+                    if(packet.status == 'done'){
+                        var pre = document.createElement('pre')
+                        pre.appendChild(document.createTextNode(packet.data.text))
+                        line.innerHTML = ''
+                        line.appendChild(pre)
+                    }
+                    log.insertBefore(line, log.firstChild)
+                }
+            }
+            function recognizeFile(file){
+                document.querySelector("#log").innerHTML = ''
+              const corePath = window.navigator.userAgent.indexOf("Edge") > -1
+                ? 'tesseract.js-core/tesseract-core.asm.js'
+                : 'tesseract.js-core/tesseract-core.wasm.js';
+              const { TesseractWorker } = Tesseract;
+              const worker = new TesseractWorker({
+                corePath,
+              });
+                worker.recognize(file,'mon')
+                    .progress(function(packet){
+                        console.info(packet)
+                        progressUpdate(packet)
+                    })
+                    .then(function(data){
+                        console.log(data)
+                        progressUpdate({ status: 'done', data: data })
+                    })
+            }
+            </script>
 <script type="text/javascript" src="scripts/scripts.js"></script>
 </body>
 </html>
