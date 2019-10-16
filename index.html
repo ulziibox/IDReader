@@ -3,8 +3,8 @@
     <meta charset="UTF-8">
     <title>Boogle ID Reader</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/tesseract.js"></script>
-    <script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.13/dist/tesseract.min.js'></script>
+    <script src="tesseract.js/tesseract.js"></script>
+    <script src="tesseract.js\tesseract.min.js"></script>
 </head>
 <body>
     <div class="navbar">
@@ -82,7 +82,7 @@
               const worker = new TesseractWorker({
                 corePath,
               });
-                worker.recognize(file,'mon')
+                worker.recognize(file,'mon+eng')
                     .progress(function(packet){
                         console.info(packet)
                         progressUpdate(packet)
