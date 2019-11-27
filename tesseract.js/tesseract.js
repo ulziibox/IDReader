@@ -18,6 +18,7 @@
         try {
             if (!Object.assign) {
                 return false;
+                // return false;
             }
     
             // Detect buggy property enumeration order in older V8 versions.
