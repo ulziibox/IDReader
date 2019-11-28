@@ -1,98 +1,120 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Boogle ID Reader</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/tesseract.js"></script>
-    <script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.13/dist/tesseract.min.js'></script>
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="tesseract.js/tesseract.js"></script>
+    <script src="tesseract.js\tesseract.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.css"
+    />
+  </head>
+  <body>
     <div class="navbar">
-        <ul>
-            <li><a href="#">Boogle ID Reader</a></li>
-            <li><p>HCI 3-р баг</p></li>
-        </ul>
+      <ul>
+        <li><a href="#">Boogle ID Reader</a></li>
+        <li><p>HCI 3-р баг</p></li>
+      </ul>
     </div>
     <div class="sidebar">
-        <ul>
-            <h4>Үндсэн</h4>
-            <li><a class="active" href="#">Нүүр хуудас</a></li>
-            <li><a href="#">OCR гэж юу вэ?</a></li>
-            <h4>Холбоосууд</h4>
-            <li><a href="#">Хэрхэн ашиглах вэ?</a></li>
-            <li><a href="#">Хичээлийн вэбсайт</a></li>
-        </ul>
+      <ul>
+        <h4>Үндсэн</h4>
+        <li><a class="active" href="#">Нүүр хуудас</a></li>
+        <li><a href="#">OCR гэж юу вэ?</a></li>
+        <h4>Холбоосууд</h4>
+        <li><a href="#">Хэрхэн ашиглах вэ?</a></li>
+        <li><a href="#">Хичээлийн вэбсайт</a></li>
+      </ul>
     </div>
-    <div class="container">
-        <div class="readerBox">
-            <div id="log"></div>
-            <div id="reader">
-                <div class="dragFile">
-                    <img src="img/upload.png">
-                    <p>Зургийг энэ хэсэгт <b>чирж</b> хуулах боломжтой</p>
-                </div>
-                <div class="readerFooter">
-                    <div class="uploadFile" id="uploadFile">
-                        <input type="file" id="real-file" accept="image/*" onchange="recognizeFile(window.lastFile=this.files[0])" hidden/>
-                        <span id="upload-text">Хоосон байна</span>
-                        <button type="button" id="upload-button">Зураг оруулах</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-            function progressUpdate(packet){
-                document.getElementById("reader").style.display = "none";
 
-                var log = document.getElementById('log');
-                if(log.firstChild && log.firstChild.status === packet.status){
-                    // if('progress' in packet){
-                    //     var progress = log.firstChild.querySelector('progress')
-                    //     progress.value = packet.progress
-                    // }
-                }else{
-                    var line = document.createElement('div');
-                    line.status = packet.status;
-                    var status = document.createElement('div')
-                    status.className = 'status'
-                    status.appendChild(document.createTextNode(packet.status))
-                    line.appendChild(status)
-                    if('progress' in packet){
-                        var progress = document.createElement('progress')
-                        progress.value = packet.progress
-                        progress.max = 1
-                        line.appendChild(progress)
-                    }
-                    if(packet.status == 'done'){
-                        var pre = document.createElement('pre')
-                        pre.appendChild(document.createTextNode(packet.data.text))
-                        line.innerHTML = ''
-                        line.appendChild(pre)
-                    }
-                    log.insertBefore(line, log.firstChild)
-                }
-            }
-            function recognizeFile(file){
-                document.querySelector("#log").innerHTML = ''
-              const corePath = window.navigator.userAgent.indexOf("Edge") > -1
-                ? 'tesseract.js-core/tesseract-core.asm.js'
-                : 'tesseract.js-core/tesseract-core.wasm.js';
-              const { TesseractWorker } = Tesseract;
-              const worker = new TesseractWorker({
-                corePath,
-              });
-                worker.recognize(file,'mon')
-                    .progress(function(packet){
-                        console.info(packet)
-                        progressUpdate(packet)
-                    })
-                    .then(function(data){
-                        console.log(data)
-                        progressUpdate({ status: 'done', data: data })
-                    })
-            }
-            </script>
-<script type="text/javascript" src="scripts/scripts.js"></script>
-</body>
+    <div class="container">
+      <div class="readerBox">
+        <div id="reader">
+          <div class="dragFile">
+            <p>Зургийг энэ хэсэгт <b>чирж</b> хуулах боломжтой</p>
+            <div>
+              <canvas id="canvas">
+                Your browser does not support the HTML5 canvas element.
+              </canvas>
+            </div>
+          </div>
+          <div class="readerFooter">
+            <div class="uploadFile" id="uploadFile">
+              <!-- <input type="button" id="btnCrop" value="Crop" /> -->
+              <input type="file" id="real-file" accept="image/*" hidden />
+              <span id="upload-text">Хоосон байна</span>
+              <button type="button" id="upload-button">Зураг оруулах</button>
+              <button type="button" id="btnCrop" style="display: none;">
+                Эхлэх
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="loading" style="display: none;">
+          <div class="header">
+            <div class="show">
+              <div class="loader"></div>
+              <p>Уншиж байна</p>
+            </div>
+          </div>
+          <div class="readerFooter">
+            <div class="uploadFile" id="uploadFile">
+              <!-- <input type="button" id="btnCrop" value="Crop" /> -->
+              <button onclick="restartOcr()" id="upload-button">
+                Болих
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="result" style="display: none;">
+          <div class="header">
+            <div id="resultImg">
+              <div class="title">
+                <h4>Таны оруулсан зураг</h4>
+              </div>
+
+              <!-- <img src="./img/id_front_ (23).png" /> -->
+            </div>
+            <div id="registerData">
+              <div class="title">
+                <h4>Үр дүн</h4>
+              </div>
+              <div id="data">
+                <!-- <h5>Регистр</h5>
+                <p>ТА98092219</p>
+                <h5>Төрсөн аймаг</h5>
+                <p>Дархан-Уул</p>
+                <h5>Төрсөн он сар өдөр</h5>
+                <p>1998/09/22</p>
+                <h5>Нас</h5>
+                <p>21</p>
+                <h5>Хүйс</h5>
+                <p>Эрэгтэй</p> -->
+              </div>
+              <!-- <p>Уншиж байна</p> -->
+            </div>
+          </div>
+          <div class="readerFooter">
+            <button onclick="restartOcr()" id="restartBtn">
+              Өөр зураг уншуулах
+            </button>
+            <div class="heartCount">
+              <p id="loveCount">200</p>
+              <img
+                onclick="loveCount()"
+                id="loveBtn"
+                src="./img/heart-solid.svg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.js"></script>
+    <script type="text/javascript" src="scripts/scripts.js"></script>
+  </body>
 </html>
