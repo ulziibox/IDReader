@@ -165,7 +165,7 @@ function dataGenerator(b) {
       t = `Хэнтий`;
       break;
     case "Т":
-      t = `ДарханУул`;
+      t = `Дархан-Уул`;
       break;
     case "Ф":
       t = `Орхон`;
