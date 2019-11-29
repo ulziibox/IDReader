@@ -60,7 +60,7 @@ $("#real-file").on("change", function() {
 
 function progressUpdate(packet, oldImg) {
   $result = $("#resultImg");
-  if (packet.status == "done") {
+  if (packet.status == "done"&& packet.data.text.match(/[А-Я][А-Я]\d\d\d\d\d\d\d\d/g)) {
     document.getElementById("loading").remove();
     document.getElementById("result").style.display = "block";
     $result.append($("<img>").attr("src", oldImg));
@@ -78,6 +78,7 @@ function progressUpdate(packet, oldImg) {
     // document.getElementById("resultImg").style.display = "block";
     console.log(packet.data.text);
   }
+  else {console.log("error"); console.log(packet.data.text);}
 }
 function recognizeFile(file, oldImg) {
   const corePath =
@@ -177,22 +178,25 @@ function dataGenerator(b) {
       t = `Улаанбаатар`;
       break;
   }
-  c = parseInt(b[4]) * 10 + parseInt(b[5]);
-  if (c < 12) {
-    y = 1900 + parseInt(b[2]) * 10 + parseInt(b[3]);
-    m = c;
-  } else {
-    y = 2000 + parseInt(b[2]) * 10 + parseInt(b[3]);
-    m = c - 20;
+  if ((parseInt(b[4]) * 10 + parseInt(b[5])) < 13) {
+    y=1900+parseInt(b[2])*10+parseInt(b[3]);
+    m = b[4]+b[5];
+  } else if ((parseInt(b[4]) * 10 + parseInt(b[5]) > 12)&&(parseInt(b[4]) * 10 + parseInt(b[5]) < 30)){
+    y=2000+parseInt(b[2])*10+parseInt(b[3]);
+    m = '0'+b[5];
   }
-  d = parseInt(b[6]) * 10 + parseInt(b[7]);
+  else if ((parseInt(b[4]) * 10 + parseInt(b[5])) < 32){
+    y=2000+parseInt(b[2])*10+parseInt(b[3]);
+    m = '1'+b[5];
+  }
+  d = b[6] + b[7];
   if (parseInt(b[8]) % 2 == 0) {
     h = `Эмэгтэй`;
   } else {
     h = `Эрэгтэй`;
   }
   glg = new Date();
-  gl = new Date(y, m - 1, d);
+  gl = new Date(y, m, d);
 
   return {
     bornIn: t,
