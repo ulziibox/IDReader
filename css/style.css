@@ -108,18 +108,31 @@ body {
 }
 
 .dragFile {
-  background: url(../img/upload-sized.png) no-repeat;
+  /* background: url(../img/upload-sized.png) no-repeat;
   background-size: cover;
   height: 410px;
-  /* padding: 20px; */
+  padding: 20px; */
   display: flex;
   justify-content: center;
   align-items: center;
+  /* text-align: center; */
+  margin: 14px;
+  width: 96%;
+  height: 410px;
+  /* line-height: 410px; */
+  border: 2px dashed #ccc;
+  color: #ccc;
+  border-radius: 5px;
 }
 
-.dragFile img {
-  width: 100%;
+.dragFile.dragover {
+  border-color: #000;
+  color: #000;
 }
+
+/* .dragFile img {
+  width: 100%;
+} */
 
 .dragFile p {
   margin-top: 70px;
@@ -165,7 +178,7 @@ body {
 }
 
 #loading .header {
-  height: 410px;
+  height: 400px;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -311,11 +324,20 @@ img {
 }
 
 #canvas {
-  height: 100%;
-  width: 100%;
+  z-index: 1;
+  position: absolute;
+  height: 410px;
+  width: 800px;
   /* background-color: #ffffff; */
   cursor: default;
   /* border: 1px solid black; */
+}
+
+.cropper-container {
+  z-index: 1;
+  position: absolute !important;
+  height: 410px;
+  width: 100%;
 }
 
 .error {

@@ -2,6 +2,27 @@ const realFileBtn = document.getElementById("real-file");
 const customBtn = document.getElementById("upload-button");
 const customTxt = document.getElementById("upload-text");
 
+(function() {
+  var dropzone = document.getElementById("dragFile");
+
+  dropzone.ondrop = function(e) {
+    e.preventDefault();
+    this.className = "dragFile";
+    customTxt.innerHTML = e.dataTransfer.files[0].name;
+    dragImage(e.dataTransfer.files);
+  };
+
+  dropzone.ondragover = function() {
+    this.className = "dragFile dragover";
+    return false;
+  };
+
+  dropzone.ondragleave = function() {
+    this.className = "dragFile";
+    return false;
+  };
+})();
+
 customBtn.addEventListener("click", function() {
   document.getElementById("real-file").click();
 });
@@ -11,6 +32,7 @@ realFileBtn.addEventListener("change", function() {
     customTxt.innerHTML = realFileBtn.value.match(
       /[\/\\]([\w\d\s\.\-\(\)]+)$/
     )[1];
+    dragImage(realFileBtn.files);
   }
 });
 
@@ -19,11 +41,12 @@ realFileBtn.addEventListener("change", function() {
 var canvas = $("#canvas"),
   context = canvas.get(0).getContext("2d");
 
-$("#real-file").on("change", function() {
+function dragImage(files) {
+  console.log("hello");
   document.getElementById("btnCrop").style.display = "inline";
   document.getElementById("upload-button").remove();
-  if (this.files && this.files[0]) {
-    if (this.files[0].type.match(/^image\//)) {
+  if (files && files[0]) {
+    if (files[0].type.match(/^image\//)) {
       var reader = new FileReader();
       reader.onload = function(evt) {
         var img = new Image();
@@ -49,18 +72,22 @@ $("#real-file").on("change", function() {
         };
         img.src = evt.target.result;
       };
-      reader.readAsDataURL(this.files[0]);
+      reader.readAsDataURL(files[0]);
     } else {
       alert("Invalid file type! Please select an image file.");
     }
   } else {
     alert("No file(s) selected.");
   }
-});
+}
 
 function progressUpdate(packet, oldImg) {
   $result = $("#resultImg");
-  if (packet.status == "done"&& packet.data.text.match(/[А-Я][А-Я]\d\d\d\d\d\d\d\d/g)) {
+
+  if (
+    packet.status == "done" &&
+    packet.data.text.match(/[А-Я][А-Я]\d\d\d\d\d\d\d\d/g)
+  ) {
     document.getElementById("loading").remove();
     document.getElementById("result").style.display = "block";
     $result.append($("<img>").attr("src", oldImg));
@@ -77,8 +104,19 @@ function progressUpdate(packet, oldImg) {
     <p>${idData.sex}</p>`;
     // document.getElementById("resultImg").style.display = "block";
     console.log(packet.data.text);
+  } else {
+    console.log("error");
+    console.log(packet.data.text);
+    document.getElementById("loading").remove();
+    document.getElementById("result").style.display = "block";
+    $result.append($("<img>").attr("src", oldImg));
+    document.getElementById("data").innerHTML = ` <div class="error">
+    <div>
+      <p class="errorHeader">Мэдээллийг уншиж чадсангүй</p>
+      <p>Таны оруулсан зураг шаардлага хангахгүй байна</p>
+    </div>
+  </div>`;
   }
-  else {console.log("error"); console.log(packet.data.text);}
 }
 function recognizeFile(file, oldImg) {
   const corePath =
@@ -178,16 +216,18 @@ function dataGenerator(b) {
       t = `Улаанбаатар`;
       break;
   }
-  if ((parseInt(b[4]) * 10 + parseInt(b[5])) < 13) {
-    y=1900+parseInt(b[2])*10+parseInt(b[3]);
-    m = b[4]+b[5];
-  } else if ((parseInt(b[4]) * 10 + parseInt(b[5]) > 12)&&(parseInt(b[4]) * 10 + parseInt(b[5]) < 30)){
-    y=2000+parseInt(b[2])*10+parseInt(b[3]);
-    m = '0'+b[5];
-  }
-  else if ((parseInt(b[4]) * 10 + parseInt(b[5])) < 32){
-    y=2000+parseInt(b[2])*10+parseInt(b[3]);
-    m = '1'+b[5];
+  if (parseInt(b[4]) * 10 + parseInt(b[5]) < 13) {
+    y = 1900 + parseInt(b[2]) * 10 + parseInt(b[3]);
+    m = b[4] + b[5];
+  } else if (
+    parseInt(b[4]) * 10 + parseInt(b[5]) > 12 &&
+    parseInt(b[4]) * 10 + parseInt(b[5]) < 30
+  ) {
+    y = 2000 + parseInt(b[2]) * 10 + parseInt(b[3]);
+    m = "0" + b[5];
+  } else if (parseInt(b[4]) * 10 + parseInt(b[5]) < 32) {
+    y = 2000 + parseInt(b[2]) * 10 + parseInt(b[3]);
+    m = "1" + b[5];
   }
   d = b[6] + b[7];
   if (parseInt(b[8]) % 2 == 0) {
