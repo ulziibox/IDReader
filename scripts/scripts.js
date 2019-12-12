@@ -2,6 +2,27 @@ const realFileBtn = document.getElementById("real-file");
 const customBtn = document.getElementById("upload-button");
 const customTxt = document.getElementById("upload-text");
 
+(function() {
+  var dropzone = document.getElementById("dragFile");
+
+  dropzone.ondrop = function(e) {
+    e.preventDefault();
+    this.className = "dragFile";
+    customTxt.innerHTML = e.dataTransfer.files[0].name;
+    dragImage(e.dataTransfer.files);
+  };
+
+  dropzone.ondragover = function() {
+    this.className = "dragFile dragover";
+    return false;
+  };
+
+  dropzone.ondragleave = function() {
+    this.className = "dragFile";
+    return false;
+  };
+})();
+
 customBtn.addEventListener("click", function() {
   document.getElementById("real-file").click();
 });
@@ -11,6 +32,7 @@ realFileBtn.addEventListener("change", function() {
     customTxt.innerHTML = realFileBtn.value.match(
       /[\/\\]([\w\d\s\.\-\(\)]+)$/
     )[1];
+    dragImage(realFileBtn.files);
   }
 });
 
@@ -19,11 +41,12 @@ realFileBtn.addEventListener("change", function() {
 var canvas = $("#canvas"),
   context = canvas.get(0).getContext("2d");
 
-$("#real-file").on("change", function() {
+function dragImage(files) {
+  console.log("hello");
   document.getElementById("btnCrop").style.display = "inline";
   document.getElementById("upload-button").remove();
-  if (this.files && this.files[0]) {
-    if (this.files[0].type.match(/^image\//)) {
+  if (files && files[0]) {
+    if (files[0].type.match(/^image\//)) {
       var reader = new FileReader();
       reader.onload = function(evt) {
         var img = new Image();
@@ -49,14 +72,14 @@ $("#real-file").on("change", function() {
         };
         img.src = evt.target.result;
       };
-      reader.readAsDataURL(this.files[0]);
+      reader.readAsDataURL(files[0]);
     } else {
       alert("Invalid file type! Please select an image file.");
     }
   } else {
     alert("No file(s) selected.");
   }
-});
+}
 
 function progressUpdate(packet, oldImg) {
   $result = $("#resultImg");

@@ -35,21 +35,19 @@
     <div class="container">
       <div class="readerBox">
         <div id="reader">
-          <div class="dragFile">
-            <p>Зургийг энэ хэсэгт <b>чирж</b> хуулах боломжтой</p>
-            <div>
-              <canvas id="canvas">
-                Your browser does not support the HTML5 canvas element.
-              </canvas>
-            </div>
+          <div class="dragFile" id="dragFile">
+            Зургийг энэ хэсэгт чирж хуулах боломжтой
+            <canvas id="canvas">
+              Your browser does not support the HTML5 canvas element.
+            </canvas>
           </div>
           <div class="readerFooter">
             <div class="uploadFile" id="uploadFile">
               <!-- <input type="button" id="btnCrop" value="Crop" /> -->
               <input type="file" id="real-file" accept="image/*" hidden />
               <span id="upload-text">Хоосон байна</span>
-              <button type="button" id="upload-button">Зураг оруулах</button>
-              <button type="button" id="btnCrop" style="display: none;">
+              <button id="upload-button">Зураг оруулах</button>
+              <button id="btnCrop" style="display: none;">
                 Эхлэх
               </button>
             </div>
