@@ -116,9 +116,15 @@ body {
   justify-content: center;
   align-items: center;
 }
+#real-file{
+  margin: auto;
+  height: 410px;
+  width: 50%;
+  z-index: 1;
+}
 
 .dragFile img {
-  width: 100%;
+width: 100%;
 }
 
 .dragFile p {

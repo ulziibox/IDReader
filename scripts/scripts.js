@@ -19,11 +19,11 @@ realFileBtn.addEventListener("change", function() {
 var canvas = $("#canvas"),
   context = canvas.get(0).getContext("2d");
 
-$("#real-file").on("change", function() {
+$("#real-file").on("change", function(e) {
   document.getElementById("btnCrop").style.display = "inline";
   document.getElementById("upload-button").remove();
-  if (this.files && this.files[0]) {
-    if (this.files[0].type.match(/^image\//)) {
+  if (e.target.files && e.target.files[0]) {
+    if (e.target.files[0].type.match(/^image\//)) {
       var reader = new FileReader();
       reader.onload = function(evt) {
         var img = new Image();
@@ -49,7 +49,7 @@ $("#real-file").on("change", function() {
         };
         img.src = evt.target.result;
       };
-      reader.readAsDataURL(this.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
     } else {
       alert("Invalid file type! Please select an image file.");
     }
