@@ -314,6 +314,7 @@ progress[value="1"] {
 #log > div:first-child {
   border: 0;
 }
+
 .status {
   min-width: 250px;
 }
