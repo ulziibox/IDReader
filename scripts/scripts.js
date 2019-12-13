@@ -42,7 +42,6 @@ var canvas = $("#canvas"),
   context = canvas.get(0).getContext("2d");
 
 function dragImage(files) {
-  console.log("hello");
   document.getElementById("btnCrop").style.display = "inline";
   document.getElementById("upload-button").remove();
   if (files && files[0]) {
